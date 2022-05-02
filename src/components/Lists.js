@@ -17,7 +17,10 @@ export default function Lists() {
 
     const [value, setValue] = useState('Customers');
     const handleChange = (event, value) => {  setValue(value);};
-    const [trainings, setTrainings] = useState([]);
+
+    //                      //
+    // CUSTOMER OSUUS ALKAA //
+    //                      //
 
     function Customers() {
 
@@ -104,8 +107,6 @@ export default function Lists() {
         .catch( err => console.error(err) );
 
 }
-        
-        
 
         const columns = [
             {headerName: "First Name",
@@ -173,7 +174,7 @@ export default function Lists() {
             headerName: "", 
             field: "links.0.href",
             width: 60,
-            cellRendererFramework: params => 
+            cellRenderer: params => 
             <AddTraining NewTraining={NewTraining} params={params}  />
         },
         {
@@ -216,6 +217,14 @@ export default function Lists() {
         )
     }
 
+    //                        //
+    // CUSTOMER OSUUS PÄÄTTYY //
+    //                        //
+//-------------------------------------------------------------------//
+    //                        //
+    // TRAININGS OSUUS ALKAA  //
+    //                        //
+
     function Trainings() {
         const [trainings, setTrainings] = useState([]);
         const [open, setOpen] = React.useState(false);
@@ -229,6 +238,20 @@ export default function Lists() {
             .then(data => setTrainings(data))
 
       }
+
+      const DeleteTraining = (link) => {
+        fetch(link, { method:'DELETE' })
+        .then( response => {
+            if(response.ok){
+                fetchTrainings();
+                setMsg("Training deleted.");
+                setOpen(true);
+            } else {
+                alert('Error while deleting training');
+            }
+        } )
+        .catch( err => console.error(err) );
+    }
 
       const columns = [
 
@@ -284,6 +307,14 @@ export default function Lists() {
             flex: 2
         },
 
+        {
+            width: 60,
+            headerName: "",
+            field: '_links.0.href',
+            cellRenderer: params =>
+            <Delete  DeleteThing={DeleteTraining} params={params} />
+        },
+
       ];
       return (
             
@@ -296,9 +327,20 @@ export default function Lists() {
             suppressMovableColumns={true}
           >
           </AgGridReact>
+          <Snackbar
+             open={open}
+             message={msg}
+             autoHideDuration={3000}
+             onClose={() => setOpen(false)}
+      />
   </div>
 
   )
+
+    //                         //
+    // TRAININGS OSUUS PÄÄTTYY //
+    //                         //
+//-----------------------------------------------------//
 
     }
 
