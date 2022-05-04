@@ -1,4 +1,4 @@
-import React, { useState, useEffect }  from "react";
+import React, { useState, useEffect, useRef }  from "react";
 import { AgGridReact } from "ag-grid-react";
 import Tabs from'@mui/material/Tabs';
 import Tab from'@mui/material/Tab';
@@ -10,6 +10,8 @@ import AddCustomer from "./AddCustomer";
 import EditCustomer from "./EditCustomer";
 import Delete from "./Delete";
 import AddTraining from "./AddTraining";
+import EventCalendar from "./EventCalendar";
+import { Button } from "@mui/material";
 
 
 
@@ -17,6 +19,7 @@ export default function Lists() {
 
     const [value, setValue] = useState('Customers');
     const handleChange = (event, value) => {  setValue(value);};
+    const trainingslink = 'https://customerrest.herokuapp.com/api/trainings/'
 
     //                      //
     // CUSTOMER OSUUS ALKAA //
@@ -27,6 +30,8 @@ export default function Lists() {
         const [customers, setCustomers] = useState([]);
         const [open, setOpen] = React.useState(false);
         const [msg, setMsg] = useState('');
+        const [gridApi, setGridApi] = useState(null);
+        const gridRef = useRef();
 
         useEffect(() =>  fetchCustomers(), []);
 
@@ -106,7 +111,15 @@ export default function Lists() {
         })
         .catch( err => console.error(err) );
 
-}
+        }
+
+        const Export = () => {
+            gridApi.exportDataAsCsv();
+          };
+    
+          function onGridReady(params) {
+            setGridApi(params.api);
+          }
 
         const columns = [
             {headerName: "First Name",
@@ -195,14 +208,19 @@ export default function Lists() {
 
         return (
             <>
+               <Button style={{margin:10}} size="small" variant="outlined" onClick={() => Export()}>
+              Export CSV file
+              </Button>
               <div className="ag-theme-material"
               style={{height: '1000px', width: '80%', margin: 'auto'}} >
                 <AddCustomer SaveCustomer={SaveCustomer} />
                 <AgGridReact  
-                   rowData={customers} 
-                   columnDefs={columns}
-                   animateRows={true}
-                   suppressMovableColumns={true}
+                    rowData={customers} 
+                    columnDefs={columns}
+                    animateRows={true}
+                    suppressMovableColumns={true}
+                    ref={gridRef}
+                    onGridReady={onGridReady}
                 >
                 </AgGridReact>
         </div>
@@ -229,6 +247,8 @@ export default function Lists() {
         const [trainings, setTrainings] = useState([]);
         const [open, setOpen] = React.useState(false);
         const [msg, setMsg] = useState('');
+        const [gridApi, setGridApi] = useState(null);
+        const gridRef = useRef();
 
         useEffect( () => {fetchTrainings(); }, []);
 
@@ -252,6 +272,14 @@ export default function Lists() {
         } )
         .catch( err => console.error(err) );
     }
+
+    const Export = () => {
+        gridApi.exportDataAsCsv();
+      };
+
+      function onGridReady(params) {
+        setGridApi(params.api);
+      }
 
       const columns = [
 
@@ -317,7 +345,10 @@ export default function Lists() {
 
       ];
       return (
-            
+          <>
+        <Button style={{margin:10}} size="small" variant="outlined" onClick={() => Export()}>
+        Export CSV file
+        </Button>
         <div className="ag-theme-material"
         style={{height: '700px', width: '80%', margin: 'auto'}} >
           <AgGridReact  
@@ -325,15 +356,18 @@ export default function Lists() {
             columnDefs={columns}
             animateRows={true}
             suppressMovableColumns={true}
+            ref={gridRef}
+            onGridReady={onGridReady}
           >
           </AgGridReact>
+          </div>
           <Snackbar
              open={open}
              message={msg}
              autoHideDuration={3000}
              onClose={() => setOpen(false)}
       />
-  </div>
+  </>
 
   )
 
@@ -349,9 +383,11 @@ export default function Lists() {
         <Tabs value={value}onChange={handleChange}>
             <Tab value="Customers"label="Customers" />       
             <Tab value="Trainings"label="Trainings" />
+            <Tab value="Calendar"label="Calendar" />
         </Tabs>
         {value === 'Customers' && <div> <Customers /></div>}
         {value === 'Trainings' && <div> <Trainings /></div>}
+        {value === 'Calendar' && <div> <EventCalendar link={trainingslink} /></div>}
         </div>
         );
       
