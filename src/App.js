@@ -4,6 +4,7 @@ import Lists from './components/Lists';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
+import Footer from './components/footer';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         </Toolbar>
       </AppBar>
       <Lists />
+    <Footer/>
     </div>
   );
 }
