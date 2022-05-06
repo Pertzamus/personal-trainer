@@ -12,6 +12,7 @@ import Delete from "./Delete";
 import AddTraining from "./AddTraining";
 import EventCalendar from "./EventCalendar";
 import { Button } from "@mui/material";
+import Statistics from "./Statistics";
 
 
 
@@ -384,10 +385,13 @@ export default function Lists() {
             <Tab value="Customers"label="Customers" />       
             <Tab value="Trainings"label="Trainings" />
             <Tab value="Calendar"label="Calendar" />
+            <Tab value="Statistics"label="Statistics Chart"/>
         </Tabs>
         {value === 'Customers' && <div> <Customers /></div>}
         {value === 'Trainings' && <div> <Trainings /></div>}
         {value === 'Calendar' && <div> <EventCalendar link={trainingslink} /></div>}
+        {value === 'Statistics' && <div> <Statistics link={trainingslink} /></div>}
+
         </div>
         );
       
