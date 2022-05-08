@@ -34,12 +34,12 @@ export default function Statistics({link}) {
 return (
     <div className="ag-theme-material"
     style=  {{
+        height: '700px',
+        width: '80%',
         display: 'flex',  
-        justifyContent:'center', 
-        alignItems:'center' 
              }}>
     <BarChart 
-    width={1000} 
+    width={600} 
     height={700} 
     data={data}>
         <CartesianGrid strokeDasharray="1" />
